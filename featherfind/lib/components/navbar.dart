@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:featherfind/constants/theme.dart';
 import 'package:featherfind/screens/homepage.dart';
 import 'package:featherfind/screens/mappage.dart';
 import 'package:featherfind/screens/profilepage.dart';
@@ -55,7 +56,7 @@ class _NavbarState extends State<Navbar> {
         itemCount: iconList.length,
         tabBuilder: (int index, bool isActive) {
           final color =
-              isActive ? const Color.fromARGB(255, 27, 95, 150) : Colors.grey;
+              isActive ? ThemeColor.bottonActive : ThemeColor.bottonInactive;
           return Column(
             children: [
               const SizedBox(

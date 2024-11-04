@@ -37,8 +37,10 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+    defaultConfig{
+        minSdkVersion 24
+    }
 }
-
 flutter {
     source = "../.."
 }

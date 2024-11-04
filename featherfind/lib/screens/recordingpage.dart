@@ -5,6 +5,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 Future<void> requestPermission() async {
   final status = await Permission.microphone.request();
@@ -42,6 +44,26 @@ class _RecordingpageState extends State<Recordingpage> {
     await controller.record(path: path);
   }
 
+  Future<void> uploadAudio() async {
+    print("audio upload starting..................");
+    String path = await getFilePath();
+    File audioFile = File(path);
+
+    if (await audioFile.exists()) {
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('https://<Server>/upload'));
+      request.files.add(await http.MultipartFile.fromPath(
+          'audio', audioFile.path,
+          contentType: MediaType('audio', 'aac')));
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        print("success");
+      } else {
+        print("oops");
+      }
+    }
+  }
+
   Future<void> stopRecording() async {
     // await recorder.stopRecorder();
     // await recorder.closeRecorder();
@@ -49,45 +71,50 @@ class _RecordingpageState extends State<Recordingpage> {
     setState(() {
       isRecording = false;
     });
+    await uploadAudio();
   }
+  //Testing the recorded audio
+  // Future<void> playRecording() async {
+  //   String path = await getFilePath();
 
-  Future<void> playRecording() async {
-    String path = await getFilePath();
-
-    final player = FlutterSoundPlayer();
-    await player.openPlayer();
-    await player.startPlayer(fromURI: path, codec: Codec.aacADTS);
-  }
+  //   final player = FlutterSoundPlayer();
+  //   await player.openPlayer();
+  //   await player.startPlayer(fromURI: path, codec: Codec.aacADTS);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: Column(
-        children: [
-          const SizedBox(height: 80,),
-          //if(isRecording)
-            SizedBox(
-              child: AudioWaveforms(size: const Size(400,250), recorderController: controller,
-              //shouldCalculateScrolledPosition: true,
-              backgroundColor: const Color.fromARGB(255, 231, 228, 228),
-              enableGesture: false,
-              waveStyle: const WaveStyle(
-                showMiddleLine: false,
-                durationStyle: TextStyle(color: Colors.black,fontSize: 16),
-                waveCap: StrokeCap.round,
-                waveColor: Color.fromRGBO(0, 0, 0, 0.5),
-                waveThickness: 3,
-                showDurationLabel: true,
-                durationLinesColor: ThemeColor.bottonColor,
-                spacing: 8.0,
-                showBottom: true,
-                scaleFactor: 50,
-              ),),
-              
+      child: Column(children: [
+        const SizedBox(
+          height: 80,
+        ),
+        //if(isRecording)
+        SizedBox(
+          child: AudioWaveforms(
+            size: const Size(400, 250), recorderController: controller,
+            //shouldCalculateScrolledPosition: true,
+            backgroundColor: const Color.fromARGB(255, 231, 228, 228),
+            enableGesture: false,
+            waveStyle: const WaveStyle(
+              showMiddleLine: false,
+              durationStyle: TextStyle(color: Colors.black, fontSize: 16),
+              waveCap: StrokeCap.round,
+              waveColor: Color.fromRGBO(0, 0, 0, 0.5),
+              waveThickness: 3,
+              showDurationLabel: true,
+              durationLinesColor: ThemeColor.bottonColor,
+              spacing: 8.0,
+              showBottom: true,
+              scaleFactor: 60,
             ),
-          const SizedBox(height: 50,),
-          Row(
+          ),
+        ),
+        const SizedBox(
+          height: 50,
+        ),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(

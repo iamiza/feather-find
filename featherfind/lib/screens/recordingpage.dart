@@ -129,7 +129,7 @@ class _RecordingpageState extends State<Recordingpage> {
                   size: 30,
                 )),
             const SizedBox(
-              width: 40,
+              width: 80,
             ),
             ElevatedButton(
                 onPressed: stopRecording,

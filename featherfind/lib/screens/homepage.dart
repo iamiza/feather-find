@@ -1,3 +1,4 @@
+import 'package:featherfind/components/minicard.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatelessWidget {
@@ -7,7 +8,7 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        
+        child: Minicard(),
       ),
     );
   }

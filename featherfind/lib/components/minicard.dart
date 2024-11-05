@@ -15,7 +15,7 @@ class Minicard extends StatelessWidget {
               height: 88,
               padding: const EdgeInsets.fromLTRB(8, 12, 0, 0),
               decoration: BoxDecoration(
-                color: const Color.fromRGBO(217, 217, 217, 0.6),
+                color: const Color.fromARGB(40,217,217,217),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: const [
                   BoxShadow(
@@ -44,19 +44,19 @@ class Minicard extends StatelessWidget {
                       width: 8,
                     ),
                     const Expanded(
-                      child: const Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "Bird Name",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          const SizedBox(
+                          SizedBox(
                             height: 4,
                           ),
-                          const Row(
+                          Row(
                             children: [
                               Icon(
                                 Icons.access_time,
@@ -69,10 +69,10 @@ class Minicard extends StatelessWidget {
                               Text("Time")
                             ],
                           ),
-                          const SizedBox(
+                          SizedBox(
                             height: 4,
                           ),
-                          const Row(
+                          Row(
                             children: [
                               Icon(
                                 Icons.location_pin,
@@ -85,7 +85,7 @@ class Minicard extends StatelessWidget {
                               Text("Location")
                             ],
                           ),
-                          const SizedBox(
+                          SizedBox(
                             width: 10,
                           ),
                         ],
@@ -107,6 +107,7 @@ class Minicard extends StatelessWidget {
                           },
                           icon: const Icon(Icons.arrow_forward_ios_rounded),
                           iconSize: 16,
+                          color: Colors.black,
                         ),
                       ],
                     ),

@@ -39,7 +39,7 @@ class _RecordingpageState extends State<Recordingpage> {
     //await recorder.openRecorder();
     setState(() {
       isRecording = true;
-    });
+    }); 
     String path = await getFilePath();
     await controller.record(path: path);
   }

@@ -15,7 +15,7 @@ class Minicard extends StatelessWidget {
               height: 88,
               padding: const EdgeInsets.fromLTRB(8, 12, 0, 0),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(40,217,217,217),
+                color: const Color.fromARGB(70,217,217,217),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: const [
                   BoxShadow(

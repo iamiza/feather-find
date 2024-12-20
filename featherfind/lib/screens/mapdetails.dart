@@ -1,4 +1,5 @@
 import 'package:featherfind/components/detailscard.dart';
+import 'package:featherfind/screens/mappage.dart';
 import 'package:flutter/material.dart';
 
 class MapDetails extends StatefulWidget {
@@ -12,7 +13,12 @@ class _MapDetailsState extends State<MapDetails> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Detailscard(),
+      body: Stack(
+        children: [
+          Mappage(),
+          Detailscard()
+        ],
+      ),
     );
   }
 }

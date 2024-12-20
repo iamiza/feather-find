@@ -1,6 +1,6 @@
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:featherfind/constants/theme.dart';
-import 'package:featherfind/providers/recordingProvider.dart';
+import 'package:featherfind/providers/recordingprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +17,32 @@ class Recordingpage extends StatelessWidget {
             const SizedBox(
               height: 80,
             ),
-            //if (recordingState.isRecording)
-            SizedBox(child: AudioVisualization(controller: provider.controller)),
+            //if (provider.isInTrimMode)
+            SizedBox(
+                child: AudioVisualization(controller: provider.controller)),
+            // if (provider.isInTrimMode)
+            //   Positioned(
+            //     top: 80,
+            //     child: GestureDetector(
+            //     onPanUpdate: (details){
+            //       //trimming logic here maybe ???
+            //     },
+            //     child: Container(
+            //       height: 250,
+            //       decoration: BoxDecoration(
+            //         border: Border.all(
+            //           color:  Colors.black,
+            //           width: 2,
+            //         )
+            //       ),
+            //       child:const Center(
+            //         child: Text("Drag to select audio portion",
+            //         style: TextStyle(color: const Color.fromARGB(59, 91, 147, 171))),
+                    
+    
+            //       ),
+            //     ),
+            //   ) ),
             const SizedBox(
               height: 50,
             ),
@@ -38,23 +62,24 @@ class Recordingpage extends StatelessWidget {
                       color: Colors.white,
                       size: 30,
                     )),
-                //if (recordingState.isRecording)
-                const SizedBox(
-                  width: 80,
-                ),
-                //if(recordingState.isRecording)
-                ElevatedButton(
-                    onPressed: provider.stopRecording,
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: ThemeColor.bottonColor,
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(20)),
-                    child: const Icon(
-                      Icons.stop,
-                      color: Colors.white,
-                      size: 30,
-                    )),
-                //ElevatedButton(onPressed: playRecording, child: const Icon(Icons.play_arrow))
+                if (provider.isRecording)
+                  const SizedBox(
+                    width: 80,
+                  ),
+                if (provider.isRecording)
+                  ElevatedButton(
+                      onPressed: () {
+                        provider.stopRecording(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: ThemeColor.bottonColor,
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(20)),
+                      child: const Icon(
+                        Icons.stop,
+                        color: Colors.white,
+                        size: 30,
+                      )),
               ],
             ),
           ]),
@@ -89,7 +114,7 @@ class AudioVisualization extends StatelessWidget {
         showDurationLabel: true,
         durationLinesColor: ThemeColor.bottonColor,
         spacing: 8.0,
-        showBottom: true,
+        showTop: true,
         scaleFactor: 60,
       ),
     );

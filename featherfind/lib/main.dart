@@ -1,5 +1,5 @@
 import 'package:featherfind/components/navbar.dart';
-import 'package:featherfind/providers/recordingProvider.dart';
+import 'package:featherfind/providers/recordingprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

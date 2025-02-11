@@ -2,8 +2,8 @@ import 'package:featherfind/screens/mapdetails.dart';
 import 'package:flutter/material.dart';
 
 class Minicard extends StatelessWidget {
-  const Minicard({super.key});
-
+  final String birdname,img;
+  const Minicard({super.key, required this.img,required this.birdname});
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -14,7 +14,7 @@ class Minicard extends StatelessWidget {
             height: 88,
             padding: const EdgeInsets.fromLTRB(8, 12, 0, 0),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(70,217,217,217),
+              color: const Color.fromARGB(70, 217, 217, 217),
               borderRadius: BorderRadius.circular(16),
               boxShadow: const [
                 BoxShadow(
@@ -33,29 +33,41 @@ class Minicard extends StatelessWidget {
                   ),
                   ClipRect(
                     clipBehavior: Clip.hardEdge,
-                    child: Image.asset(
-                      "assets/images/bird.png",
-                      height: 64,
-                      width: 56,
+                    child: SizedBox(
+                      width: 68,
+                      height: 68,
+                      child: Image.network(
+                          img,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                                child: Icon(Icons.broken_image, size: 50));
+                          },
+                        ),
                     ),
                   ),
                   const SizedBox(
                     width: 8,
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          "Bird Name",
-                          style: TextStyle(
+                          birdname,
+                          style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
-                        Row(
+                        const Row(
                           children: [
                             Icon(
                               Icons.access_time,
@@ -68,10 +80,10 @@ class Minicard extends StatelessWidget {
                             Text("Time")
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
-                        Row(
+                        const Row(
                           children: [
                             Icon(
                               Icons.location_pin,
@@ -84,7 +96,7 @@ class Minicard extends StatelessWidget {
                             Text("Location")
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                       ],

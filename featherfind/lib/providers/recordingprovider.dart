@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:featherfind/constants/theme.dart';
 import 'package:featherfind/screens/recordingpage.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,12 @@ import 'package:http/http.dart' as http;
 
 class Recordingprovider extends ChangeNotifier {
   bool _isRecording = false;
-  bool _isInTrimMode = false;
+  bool _hasResponse = false;
+  String _serverResponse = "";
 
   bool get isRecording => _isRecording;
-  bool get isInTrimMode => _isInTrimMode;
-
+  bool get hasResponse => _hasResponse;
+  String get serverResponse => _serverResponse;
   RecorderController controller = RecorderController();
 
   Future<void> requestPermisson() async {
@@ -31,18 +33,18 @@ class Recordingprovider extends ChangeNotifier {
     return '$path/audio_recording.aac';
   }
 
-  Future<void> enterTrimMode() async {
-    _isInTrimMode = true;
-    await controller.pause();
-    //trimming logic here ???
+  // Future<void> enterTrimMode() async {
+  //   _isInTrimMode = true;
+  //   await controller.pause();
+  //   //trimming logic here ???
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
-  Future<void> exitTrimMode() async {
-    _isInTrimMode = false;
-    notifyListeners();
-  }
+  // Future<void> exitTrimMode() async {
+  //   _isInTrimMode = false;
+  //   notifyListeners();
+  // }
 
   Future<void> startRecording() async {
     await requestPermisson();
@@ -80,13 +82,17 @@ class Recordingprovider extends ChangeNotifier {
                   ),
                   SimpleDialogOption(
                     onPressed: () {
-                      //uploadAudio();
+                      uploadAudio();
                       Navigator.pop(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const Recordingpage()));
                     },
-                    child: const Text('Confirm',style: TextStyle(fontSize: 16,color: ThemeColor.bottonColor),),
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(
+                          fontSize: 16, color: ThemeColor.bottonColor),
+                    ),
                   ),
                   const SizedBox(
                     width: 20,
@@ -98,7 +104,10 @@ class Recordingprovider extends ChangeNotifier {
                           MaterialPageRoute(
                               builder: (context) => const Recordingpage()));
                     },
-                    child: const Text('Decline',style: TextStyle(fontSize: 16),),
+                    child: const Text(
+                      'Decline',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                 ],
               )
@@ -108,7 +117,7 @@ class Recordingprovider extends ChangeNotifier {
   }
 
   Future<void> uploadAudio() async {
-    print("audio upload starting..................");
+    print("audio upload starting...");
     String path = await getFilePath();
     File audioFile = File(path);
 
@@ -123,13 +132,37 @@ class Recordingprovider extends ChangeNotifier {
     var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'https://bb47-2400-1a00-b060-e64b-53a-39c9-887e-af0b.ngrok-free.app/upload'));
+            'https://c153-2400-1a00-b030-529c-6b75-65b9-6bcb-b67c.ngrok-free.app/'));
     request.files.add(multipartFile);
     var response = await request.send();
     if (response.statusCode == 200) {
       print("success");
+      fetchData();
     } else {
       print("oops");
     }
+  }
+
+  Future<void> fetchData() async {
+    print("Fetching data from the server...");
+    var url = Uri.parse(
+        'https://3885-139-5-71-198.ngrok-free.app/get-bird');
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        _serverResponse = jsonResponse['response'] ?? "No Response Found";
+        print("Data fetched successfully: $_serverResponse");
+      } else {
+        _serverResponse =
+            "Failed to fetch data with status code: ${response.statusCode}";
+        print(_serverResponse);
+      }
+    } catch (e) {
+      _serverResponse = "An error occurred during the GET request: $e";
+      print(_serverResponse);
+    }
+    _hasResponse = true;
+    notifyListeners();
   }
 }

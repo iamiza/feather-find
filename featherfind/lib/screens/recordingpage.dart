@@ -1,4 +1,5 @@
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:featherfind/components/minicard.dart';
 import 'package:featherfind/constants/theme.dart';
 import 'package:featherfind/providers/recordingprovider.dart';
 import 'package:flutter/material.dart';
@@ -17,32 +18,10 @@ class Recordingpage extends StatelessWidget {
             const SizedBox(
               height: 80,
             ),
-            //if (provider.isInTrimMode)
+          
             SizedBox(
                 child: AudioVisualization(controller: provider.controller)),
-            // if (provider.isInTrimMode)
-            //   Positioned(
-            //     top: 80,
-            //     child: GestureDetector(
-            //     onPanUpdate: (details){
-            //       //trimming logic here maybe ???
-            //     },
-            //     child: Container(
-            //       height: 250,
-            //       decoration: BoxDecoration(
-            //         border: Border.all(
-            //           color:  Colors.black,
-            //           width: 2,
-            //         )
-            //       ),
-            //       child:const Center(
-            //         child: Text("Drag to select audio portion",
-            //         style: TextStyle(color: const Color.fromARGB(59, 91, 147, 171))),
-                    
-    
-            //       ),
-            //     ),
-            //   ) ),
+          
             const SizedBox(
               height: 50,
             ),
@@ -80,8 +59,12 @@ class Recordingpage extends StatelessWidget {
                         color: Colors.white,
                         size: 30,
                       )),
+                
               ],
             ),
+            const SizedBox(height: 32),
+            if (provider.hasResponse)
+              Minicard(img:"",birdname: provider.serverResponse)
           ]),
         );
       },

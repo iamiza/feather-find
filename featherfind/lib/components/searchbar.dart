@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({super.key});
+class SearchBarComp extends StatelessWidget {
+  const SearchBarComp({super.key});
 
-  @override
-  State<SearchBar> createState() => _SearchBarState();
-}
-
-class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width - 32,
+          child: SearchBar(
+            trailing:[
+              IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+              const SizedBox(
+                width: 10,
+              )
+            ],
+            hintText: "Search for birds",
+            onSubmitted: (value){
+              // send value for searching 
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

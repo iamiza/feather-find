@@ -26,7 +26,7 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   final List<Widget> _pages = [
-    const Homepage(),
+    Homepage(),
     const Mappage(),
     const Profilepage(),
     const Settingpage(),

@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:js_interop';
 import 'package:featherfind/constants/theme.dart';
+import 'package:featherfind/models/predictionmodel.dart';
 import 'package:featherfind/screens/recordingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
@@ -12,11 +14,11 @@ import 'package:http/http.dart' as http;
 class Recordingprovider extends ChangeNotifier {
   bool _isRecording = false;
   bool _hasResponse = false;
-  String _serverResponse = "";
+  late Predictionmodel serverResponse;
 
   bool get isRecording => _isRecording;
   bool get hasResponse => _hasResponse;
-  String get serverResponse => _serverResponse;
+  //String get serverResponse => _serverResponse;
   RecorderController controller = RecorderController();
 
   Future<void> requestPermisson() async {
@@ -30,7 +32,7 @@ class Recordingprovider extends ChangeNotifier {
     final directory = await getTemporaryDirectory();
     final path = '${directory.path}/audio';
     await Directory(path).create(recursive: true);
-    return '$path/audio_recording.aac';
+    return '$path/audio_recording.mp3';
   }
 
   // Future<void> enterTrimMode() async {
@@ -52,7 +54,9 @@ class Recordingprovider extends ChangeNotifier {
     notifyListeners();
 
     String path = await getFilePath();
-    await controller.record(path: path);
+    await controller.record(
+      path: path,
+    );
   }
 
   Future<void> stopRecording(BuildContext context) async {
@@ -116,53 +120,105 @@ class Recordingprovider extends ChangeNotifier {
         });
   }
 
+  // Future<void> uploadAudio() async {
+  //   print("audio upload starting...");
+  //   String path = await getFilePath();
+  //   File audioFile = File(path);
+
+  //   var fileBytes = await audioFile.readAsBytes();
+  //   var multipartFile = http.MultipartFile.fromBytes(
+  //     'audio',
+  //     fileBytes,
+  //     filename: audioFile.path.split('/').last,
+  //     contentType: MediaType('audio', 'mp3'),
+  //   );
+
+  //   var request = http.MultipartRequest(
+  //       'POST',
+  //       Uri.parse(
+  //           'https://4943-2400-1a00-b030-ed91-b2f9-7e87-6784-79e3.ngrok-free.app/birds/predict/'));
+  //   request.files.add(multipartFile);
+  //   var streamedResponse = await request.send();
+  //   var response = await http.Response.fromStream(streamedResponse);
+  //   if (response.statusCode == 200) {
+  //     print("success");
+  //     print({response.body});
+  //     // _hasResponse = true;
+  //     // notifyListeners();
+  //   } else {
+  //     print("oops");
+  //   }
+  // }
+
+  // Future<void> fetchData() async {
+  //   print("Fetching data from the server...");
+  //   var url = Uri.parse(
+  //       'https://3352-2400-1a00-b030-ed91-bd45-7a9f-fc9b-d0b4.ngrok-free.app/birds/predict/');
+  //   try {
+  //     var response = await http.get(url);
+  //     if (response.statusCode == 200) {
+  //       var jsonResponse = jsonDecode(response.body);
+  //       _serverResponse = jsonResponse['response'] ?? "No Response Found";
+  //       print("Data fetched successfully: $_serverResponse");
+  //     } else {
+  //       _serverResponse =
+  //           "Failed to fetch data with status code: ${response.statusCode}";
+  //       print(_serverResponse);
+  //     }
+  //   } catch (e) {
+  //     _serverResponse = "An error occurred during the GET request: $e";
+  //     print(_serverResponse);
+  //   }
+  //   _hasResponse = true;
+  //   notifyListeners();
+  // }
+
   Future<void> uploadAudio() async {
-    print("audio upload starting...");
-    String path = await getFilePath();
-    File audioFile = File(path);
+    try {
+      print("Audio upload starting...");
+      String path = await getFilePath();
+      File audioFile = File(path);
 
-    var fileBytes = await audioFile.readAsBytes();
-    var multipartFile = http.MultipartFile.fromBytes(
-      'audio',
-      fileBytes,
-      filename: audioFile.path.split('/').last,
-      contentType: MediaType('audio', 'aac'),
-    );
+      var fileBytes = await audioFile.readAsBytes();
+      var multipartFile = http.MultipartFile.fromBytes(
+        'audio',
+        fileBytes,
+        filename: audioFile.path.split('/').last,
+        contentType: MediaType('audio', 'mp3'),
+      );
 
-    var request = http.MultipartRequest(
+      var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            'https://c153-2400-1a00-b030-529c-6b75-65b9-6bcb-b67c.ngrok-free.app/'));
-    request.files.add(multipartFile);
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      print("success");
-      fetchData();
-    } else {
-      print("oops");
-    }
-  }
+            'https://4943-2400-1a00-b030-ed91-b2f9-7e87-6784-79e3.ngrok-free.app/birds/predict/'),
+      );
 
-  Future<void> fetchData() async {
-    print("Fetching data from the server...");
-    var url = Uri.parse(
-        'https://3885-139-5-71-198.ngrok-free.app/get-bird');
-    try {
-      var response = await http.get(url);
+      request.files.add(multipartFile);
+
+      var streamedResponse =
+          await request.send().timeout(Duration(seconds: 30));
+
+      var response = await http.Response.fromStream(streamedResponse);
+
       if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        _serverResponse = jsonResponse['response'] ?? "No Response Found";
-        print("Data fetched successfully: $_serverResponse");
+        print("Success: ${response.body}");
+        _hasResponse = true;
+        final Map<String,dynamic> data = json.decode(response.body);
+        serverResponse = Predictionmodel.fromJson(data);
+        notifyListeners();
+        //fetchData();
       } else {
-        _serverResponse =
-            "Failed to fetch data with status code: ${response.statusCode}";
-        print(_serverResponse);
+        print("Error: ${response.statusCode} - ${response.body}");
       }
     } catch (e) {
-      _serverResponse = "An error occurred during the GET request: $e";
-      print(_serverResponse);
+      print("Exception occurred: $e");
+
+      // Retry if it's a connection issue
+      if (e is SocketException) {
+        print("Retrying in 3 seconds...");
+        await Future.delayed(Duration(seconds: 3));
+        return uploadAudio();
+      }
     }
-    _hasResponse = true;
-    notifyListeners();
   }
 }

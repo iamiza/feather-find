@@ -1,9 +1,10 @@
 import 'package:featherfind/screens/mapdetails.dart';
 import 'package:flutter/material.dart';
 
-class Minicard extends StatelessWidget {
-  final String birdname,img,time,location;
-  const Minicard({super.key, required this.img,required this.birdname, required this.time, required this.location});
+class Prediction extends StatelessWidget {
+  final String birdname, img, confidence;
+  const Prediction({super.key, required this.birdname, required this.img, required this.confidence});
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -37,18 +38,18 @@ class Minicard extends StatelessWidget {
                       width: 68,
                       height: 68,
                       child: Image.network(
-                          img,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                                child: Icon(Icons.broken_image, size: 50));
-                          },
-                        ),
+                        img,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(
+                              child: Icon(Icons.broken_image, size: 50));
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -69,33 +70,17 @@ class Minicard extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.access_time,
-                              color: Colors.blue,
-                              size: 12,
-                            ),
+        
                             const SizedBox(
                               width: 4,
                             ),
-                            Text(time)
+                            Text("Confidence : $confidence")
                           ],
                         ),
                         const SizedBox(
                           height: 4,
                         ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_pin,
-                              color: Colors.red,
-                              size: 12,
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Text(location)
-                          ],
-                        ),
+                       
                         const SizedBox(
                           width: 10,
                         ),

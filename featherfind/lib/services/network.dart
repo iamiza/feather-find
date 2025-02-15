@@ -8,12 +8,12 @@ import 'dart:convert';
 //import 'package:flutter/material.dart';
 
 class APIRequest {
-  static const serverIP = "127.0.0.1:8000";
+  static const serverIP = "https://4943-2400-1a00-b030-ed91-b2f9-7e87-6784-79e3.ngrok-free.app";
 
   static Future<List<String>> getImage() async {
     try {
       var url = Uri.parse(
-          "https://ab6e-2400-1a00-b030-529c-6650-9e4-9713-fb08.ngrok-free.app/birds");
+          "$serverIP/birds");
 
       final Response response = await http.get(url);
       if (response.statusCode == 200) {
@@ -21,10 +21,10 @@ class APIRequest {
         List<ImageModel> imageList = ImageModel.fromJsonList(data);
         List<String> imagePath =
             imageList.map<String>((item) => item.imageURL).take(5).toList();
+        print(imagePath);
         List<String> imageUrls = imagePath
             .map((item) =>
-                "https://ab6e-2400-1a00-b030-529c-6650-9e4-9713-fb08.ngrok-free.app" +
-                item)
+                "$serverIP/$item")
             .toList();
         return imageUrls;
       } else {
@@ -37,14 +37,14 @@ class APIRequest {
 
   static Future<List<DetailsModel>> getDetails() async {
     var url = Uri.parse(
-        "https://ab6e-2400-1a00-b030-529c-6650-9e4-9713-fb08.ngrok-free.app/birds");
+        "$serverIP/locations/bird/");
 
     try {
       final Response response = await http.get(url);
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         List<DetailsModel> detailsList = DetailsModel.fromJsonList(data);
-        //print(detailsList);
+        print(detailsList);
         return detailsList;
       } else {
         throw Exception("Failed to get details");
@@ -55,7 +55,8 @@ class APIRequest {
   }
 
   static Future<List<LocationModel>> getLocation() async {
-    var url = Uri.parse("https://ab6e-2400-1a00-b030-529c-6650-9e4-9713-fb08.ngrok-free.app/locations/bird/");
+    var url = Uri.parse(
+        "$serverIP/locations/bird/");
     try {
       final Response response = await http.get(url);
       if (response.statusCode == 200) {

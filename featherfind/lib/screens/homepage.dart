@@ -1,37 +1,33 @@
 import 'package:featherfind/components/imageslider.dart';
 import 'package:featherfind/components/minicard.dart';
+import 'package:featherfind/constants/url.dart';
 import 'package:featherfind/models/detailsmodel.dart';
 import 'package:featherfind/services/network.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 
-class Homepage extends StatelessWidget {
-  Homepage({super.key});
-  Future<List<String>> birdList = APIRequest.getImage();
-  
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
 
-Future<String> getAddressFromLatLong(double latitude, double longitude) async {
-  try {
-    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
-    Placemark place = placemarks.first;
-    
-    return "${place.locality},${place.country}";
-  } catch (e) {
-    return "Unknown location";
-  }
+  @override
+  State<Homepage> createState() => _HomepageState();
 }
-List<String> locations = [
-    "Kathmandu",
-    "Pokhara",
-    "Lalitpur",
-    "Bhaktapur",
-    "Chitwan","Lumbini",
-    "Nagarkot",
-    "Rara Lake",
-    "Everest Base Camp",
-    "Annapurna Circuit",
-    "Bandipur",
-    "Ilam",];
+
+class _HomepageState extends State<Homepage> {
+  Future<List<String>> birdList = APIRequest.getImage();
+
+  Future<String> getAddressFromLatLong(
+      double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+      Placemark place = placemarks.first;
+
+      return "${place.subLocality}";
+    } catch (e) {
+      return "Unknown location";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,50 +72,67 @@ List<String> locations = [
                           ),
                         ),
                       ),
-                      
                       Expanded(
-                            child: ListView.builder(
-                                itemCount: 6,
-                                itemBuilder: (context, index) {
-                                  return Column(
-  children: [
-    FutureBuilder<String>(
-      future: getAddressFromLatLong(
-        double.parse(detailsList[index].latitude),
-        double.parse(detailsList[index].longitude),
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Minicard(
-            img: "https://4943-2400-1a00-b030-ed91-b2f9-7e87-6784-79e3.ngrok-free.app" + detailsList[index].imageURL,
-            birdname: detailsList[index].birdName,
-            time: detailsList[index].time.substring(11, 16),
-            location: "Fetching location...", // Placeholder text while loading
-          );
-        } else if (snapshot.hasError) {
-          return Minicard(
-            img: "https://4943-2400-1a00-b030-ed91-b2f9-7e87-6784-79e3.ngrok-free.app" + detailsList[index].imageURL,
-            birdname: detailsList[index].birdName,
-            time: detailsList[index].time.substring(11, 16),
-            location: "Unknown", // Error handling
-          );
-        } else {
-          return Minicard(
-            img: "https://4943-2400-1a00-b030-ed91-b2f9-7e87-6784-79e3.ngrok-free.app" + detailsList[index].imageURL,
-            birdname: detailsList[index].birdName,
-            time: detailsList[index].time.substring(11, 16),
-            location: snapshot.data ?? "Unknown", // Display the resolved location
-          );
-        }
-      },
-    ),
-    const SizedBox(height: 8),
-  ],
-);
-
-                                })
-                            ),
-                      
+                          child: ListView.builder(
+                              itemCount: 6,
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    FutureBuilder<String>(
+                                      future: getAddressFromLatLong(
+                                        double.parse(
+                                            detailsList[index].latitude),
+                                        double.parse(
+                                            detailsList[index].longitude),
+                                      ),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Minicard(
+                                            img: URL +
+                                                detailsList[index].imageURL,
+                                            birdname:
+                                                detailsList[index].birdName,
+                                            time: detailsList[index]
+                                                .time
+                                                .substring(11, 16),
+                                            location:
+                                                "Fetching location...",
+                                            id : detailsList[index].birdId, // Placeholder text while loading
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          return Minicard(
+                                            img: URL +
+                                                detailsList[index].imageURL,
+                                            birdname:
+                                                detailsList[index].birdName,
+                                            time: detailsList[index]
+                                                .time
+                                                .substring(11, 16),
+                                            location:
+                                                "Unknown", 
+                                            id: detailsList[index].birdId,
+                                          );
+                                        } else {
+                                          return Minicard(
+                                            img: URL +
+                                                detailsList[index].imageURL,
+                                            birdname:
+                                                detailsList[index].birdName,
+                                            time: detailsList[index]
+                                                .time
+                                                .substring(11, 16),
+                                            location: snapshot.data ??
+                                                "Unknown",
+                                            id: detailsList[index].birdId, 
+                                          );
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(height: 8),
+                                  ],
+                                );
+                              })),
                     ],
                   )),
             );

@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:featherfind/components/prediction.dart';
 import 'package:featherfind/constants/theme.dart';
+import 'package:featherfind/constants/url.dart';
 import 'package:featherfind/providers/recordingprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,8 +67,9 @@ class Recordingpage extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             if (provider.hasResponse)
-              Prediction(birdname: provider.serverResponse.name, img: "https://4943-2400-1a00-b030-ed91-b2f9-7e87-6784-79e3.ngrok-free.app/" + provider.serverResponse.image, confidence: provider.serverResponse.confidence)
-            // const Minicard(
+              Prediction(birdname: provider.serverResponse.name, img: URL+ provider.serverResponse.image, confidence: double.parse(provider.serverResponse.confidence.toString().substring(0, 6)),birdId: provider.serverResponse.id,),
+            if(provider.hasBird == false)
+              const Text("No bird sound present")      // const Minicard(
             //               img:
             //                   "https://4943-2400-1a00-b030-ed91-b2f9-7e87-6784-79e3.ngrok-free.app" +
             //                       "/media/images/Black-necked_Crane_1_0.jpg.webp",
@@ -106,7 +107,7 @@ class AudioVisualization extends StatelessWidget {
         durationLinesColor: ThemeColor.bottonColor,
         spacing: 8.0,
         showTop: true,
-        scaleFactor: 60,
+        scaleFactor: 90,
       ),
     );
   }

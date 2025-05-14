@@ -21,7 +21,7 @@
 // }
 class DetailsModel {
   final String imageURL;
-  final String birdId;
+  final int birdId;
   final String birdName;
   final String species;
   final String background;
@@ -55,7 +55,7 @@ class DetailsModel {
 
     return DetailsModel(
       imageURL: birdsets.isNotEmpty ? (birdsets[0]['image'] ?? '') : '',
-      birdId: bird?['id']?.toString() ?? '',
+      birdId: bird?['id'],
       birdName: bird?['name'] ?? '',
       species: bird?['species'] ?? '',
       background: bird?['background'] ?? '',
@@ -68,6 +68,8 @@ class DetailsModel {
       placeType: location?['place_type'] ?? '',
     );
   }
+
+  get image => null;
 
   static List<DetailsModel> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((bird) => DetailsModel.fromJson(bird)).toList();

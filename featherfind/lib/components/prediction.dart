@@ -1,9 +1,17 @@
-import 'package:featherfind/screens/mapdetails.dart';
+import 'package:featherfind/constants/theme.dart';
+import 'package:featherfind/screens/mapbird.dart';
 import 'package:flutter/material.dart';
 
 class Prediction extends StatelessWidget {
-  final String birdname, img, confidence;
-  const Prediction({super.key, required this.birdname, required this.img, required this.confidence});
+  final String birdname, img;
+  final double confidence;
+  final int birdId;
+  const Prediction(
+      {super.key,
+      required this.birdname,
+      required this.img,
+      required this.confidence,
+      required this.birdId});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +78,6 @@ class Prediction extends StatelessWidget {
                         ),
                         Row(
                           children: [
-        
                             const SizedBox(
                               width: 4,
                             ),
@@ -80,7 +87,6 @@ class Prediction extends StatelessWidget {
                         const SizedBox(
                           height: 4,
                         ),
-                       
                         const SizedBox(
                           width: 10,
                         ),
@@ -96,10 +102,42 @@ class Prediction extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MapDetails()));
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Map the Bird"),
+                                content:
+                                    const Text("Do you want to map this bird?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      LocationService().sendLocation(birdId);
+                                    },
+                                    child: const Text(
+                                      "Accept",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: ThemeColor.bottonColor),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 20,
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text(
+                                      "Decline",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.grey),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         icon: const Icon(Icons.arrow_forward_ios_rounded),
                         iconSize: 16,

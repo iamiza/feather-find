@@ -2,8 +2,15 @@ import 'package:featherfind/screens/mapdetails.dart';
 import 'package:flutter/material.dart';
 
 class Minicard extends StatelessWidget {
-  final String birdname,img,time,location;
-  const Minicard({super.key, required this.img,required this.birdname, required this.time, required this.location});
+  final String birdname, img, time, location;
+  final int id;
+  const Minicard(
+      {super.key,
+      required this.img,
+      required this.birdname,
+      required this.time,
+      required this.location,
+      required this.id});
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -37,18 +44,18 @@ class Minicard extends StatelessWidget {
                       width: 68,
                       height: 68,
                       child: Image.network(
-                          img,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                                child: Icon(Icons.broken_image, size: 50));
-                          },
-                        ),
+                        img,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(
+                              child: Icon(Icons.broken_image, size: 50));
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -114,7 +121,9 @@ class Minicard extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const MapDetails()));
+                                  builder: (context) => MapDetails(
+                                        id: id,
+                                      )));
                         },
                         icon: const Icon(Icons.arrow_forward_ios_rounded),
                         iconSize: 16,

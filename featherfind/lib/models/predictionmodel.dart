@@ -1,8 +1,8 @@
 class Predictionmodel {
   final String name;
   final String image;
-  final String id;
-  final String confidence;
+  final int id;
+  final double confidence;
   final bool hasBird;
 
   Predictionmodel({
@@ -15,9 +15,9 @@ class Predictionmodel {
 
   factory Predictionmodel.fromJson(Map<String, dynamic> json) {
     String predictedName = json['predicted_class'];
-    String predictedId = json['bird_id'];
+    int predictedId = json['bird_id'];
     String predictedImage = json['image'];
-    String predictedConfidence = json['confidence'];
+    double predictedConfidence = json['confidence'];
     bool predictedHasBird = json['has_bird'];
     return Predictionmodel(
         image: predictedImage,

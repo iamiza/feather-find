@@ -67,7 +67,7 @@ class Map extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const MapDetails()));
+                                            const MapDetails(id: 1,)));
                               },
                             ),
                           );
